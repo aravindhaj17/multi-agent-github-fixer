@@ -1,0 +1,30 @@
+from groq import Groq
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+def research_agent(issue, repo_code):
+
+    prompt = f"""
+You are a senior software engineer.
+
+GitHub Issue:
+{issue}
+
+Repository Code:
+{repo_code}
+
+Find the bug and explain how to fix it.
+"""
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    return response.choices[0].message.content
