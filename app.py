@@ -10,11 +10,9 @@ st.set_page_config(
 
 st.title("🤖 AI Multi-Agent Code Debugger")
 
-st.markdown(
-"""
+st.markdown("""
 Analyze GitHub issues with AI agents that **explain the bug, generate a fix, and create tests automatically**.
-"""
-)
+""")
 
 # Layout with two columns
 col1, col2 = st.columns(2)
@@ -39,30 +37,35 @@ if run_button:
 
     if not issue.strip() or not repo_code.strip():
         st.warning("⚠️ Please enter both a GitHub issue and code snippet.")
-    else:
+        st.stop()
 
-        with st.spinner("AI agents are analyzing the issue..."):
+    with st.spinner("AI agents are analyzing the issue..."):
 
-            app = create_graph()
+        # ✅ Create pipeline
+        app = create_graph()
 
-            result = app.invoke({
-                "issue": issue,
-                "repo_code": repo_code
-            })
+        # ✅ Initial state
+        state = {
+            "issue": issue,
+            "repo_code": repo_code
+        }
 
-        st.success("Analysis complete!")
+        # ✅ Run pipeline (FIXED)
+        result = app(state)
 
-        # Tabs for results
-        tab1, tab2, tab3 = st.tabs(["🔍 Research", "🛠 Fix", "🧪 Tests"])
+    st.success("Analysis complete!")
 
-        with tab1:
-            st.subheader("Research Analysis")
-            st.write(result["research_result"])
+    # Tabs for results
+    tab1, tab2, tab3 = st.tabs(["🔍 Research", "🛠 Fix", "🧪 Tests"])
 
-        with tab2:
-            st.subheader("Generated Fix")
-            st.code(result["fix"], language="python")
+    with tab1:
+        st.subheader("Research Analysis")
+        st.write(result.get("research_result", "No result"))
 
-        with tab3:
-            st.subheader("Generated Tests")
-            st.code(result["tests"], language="python")
+    with tab2:
+        st.subheader("Generated Fix")
+        st.code(result.get("fix", "No fix generated"), language="python")
+
+    with tab3:
+        st.subheader("Generated Tests")
+        st.code(result.get("tests", "No tests generated"), language="python")
