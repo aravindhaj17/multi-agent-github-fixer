@@ -1,6 +1,4 @@
 streamlit 
 langchain 
-langgraph 
 langchain-openai 
-langchain-groq 
-langchain-ollama 
+python-dotenv 
