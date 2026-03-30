@@ -1,4 +1,2 @@
-streamlit 
-langchain 
-langchain-openai 
-python-dotenv 
+streamlit
+groq
